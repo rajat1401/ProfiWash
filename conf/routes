@@ -10,4 +10,7 @@ GET     /                           controllers.HomeController.index()
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
 # get meta info by station_id, lang_code
-GET     /:entityId/:id              controllers.EntityController.getEntityById(entityId, id)
+GET     /simple/:entityId           controllers.EntityController.getAllSimple(entityId)
+GET     /:entityId/:id              controllers.EntityController.getSingle(entityId, id)
+GET     /:entityId                  controllers.EntityController.getAll(entityId)
+POST    /:entityId                  controllers.EntityController.addSingle(entityId)

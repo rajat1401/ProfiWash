@@ -4,3 +4,5 @@ trait RestEntityElement {
 
   val id: String
 }
+
+trait Input

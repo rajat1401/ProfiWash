@@ -15,8 +15,10 @@ object Entities {
 
   def caseclassToMap[A: TypeTag]: Map[String, String] = {
     typeOf[A].members.collect {
-      case m: MethodSymbol if m.isCaseAccessor => (m.name.toString, m.returnType.toString)
-    }.toMap
+      case m: MethodSymbol if m.isCaseAccessor => m
+    }.toList.map(m =>
+      (m.name.toString, m.returnType.toString)
+    ).toMap
   }
 
   def getTableFieldValue[A](tbl: A, field: String): AnyRef = {

@@ -5,10 +5,13 @@ object CommonEnums {
   object Occupation extends Enumeration {
     type Occupation = Value
 
-    val engineer = Value("Engineer")
-    val doctor = Value("Doctor")
-    val lawyer = Value("Lawyer")
-    val artist = Value("Artist")
+    val engineer,doctor,lawyer,artist = Value
+  }
+
+  object QueryType extends Enumeration {
+    type QueryType = Value
+
+    val getById,getAll,getWithQuery= Value
   }
 
 }
