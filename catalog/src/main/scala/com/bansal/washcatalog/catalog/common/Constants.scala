@@ -1,12 +1,13 @@
 package com.bansal.washcatalog.catalog.common
 
-import com.bansal.washcatalog.catalog.domain.{City, Language, RestEntity, RestEntityElement}
+import com.bansal.washcatalog.catalog.domain.{Account, City, Language, RestEntity, RestEntityElement}
 
 object Constants {
 
   val entityMap: Map[String, RestEntity[_ <: RestEntityElement]]= Map(
     "languages" -> Language,
-    "cities" -> City
+    "cities" -> City,
+    "accounts" -> Account
   )
 
   val SUCCESS= "Success"

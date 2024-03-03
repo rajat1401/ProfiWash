@@ -14,4 +14,10 @@ object CommonEnums {
     val getById,getAll,getWithQuery= Value
   }
 
+  object AccountType extends Enumeration {
+    type AccountType = Value
+
+    val asset, liability, revenue = Value
+  }
+
 }
