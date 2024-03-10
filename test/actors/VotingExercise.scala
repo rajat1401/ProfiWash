@@ -38,7 +38,31 @@ object VotingExercise extends App {
         stillwaiting = stillwaiting - sender()
         currentStats = currentStats + (candidate -> (currentStats.getOrElse(candidate, 0) + 1))
         if(stillwaiting.isEmpty){
-          println(currentStats)
+          println(s"${context.self}" + currentStats)
+        }
+    }
+  }
+
+  class VoteAggregatorStateless extends Actor {
+    override def receive: Receive = awaitingAggregate
+
+    def awaitingAggregate: Receive = {
+      case AggregateVotes(citizens) =>
+        citizens.foreach(_ ! VoteStatusRequest)
+        context.become(awaitingStatusReplies(citizens, Map()))
+    }
+
+    def awaitingStatusReplies(citizens: Set[ActorRef], currentStats: Map[String, Int]): Receive = {
+      case VoteStatusReply(None) => sender() ! MustVoteStatusRequest
+      case VoteStatusReply(Some(candidate)) =>
+        val newStats = currentStats.++(Map(candidate -> (currentStats.getOrElse(candidate, 0) + 1)))
+        val waitOnCitizens = citizens - sender()
+        if(waitOnCitizens.isEmpty){
+          println("Election concluded!!! Results below:-")
+          println("**************************************")
+          println(s"${context.self}" + newStats)
+        }else {
+          context.become(awaitingStatusReplies(citizens - sender(), newStats))
         }
     }
   }
@@ -55,6 +79,8 @@ object VotingExercise extends App {
   charlie ! Vote("Mom")
 
   val voteAggregator = actorSystem.actorOf(Props[VoteAggregator])
+  val voteAggregatorStateless = actorSystem.actorOf(Props[VoteAggregatorStateless])
   voteAggregator ! AggregateVotes(Set(alice, bob, charlie, daniel))
+  voteAggregatorStateless ! AggregateVotes(Set(alice, bob, charlie, daniel))
 
 }
