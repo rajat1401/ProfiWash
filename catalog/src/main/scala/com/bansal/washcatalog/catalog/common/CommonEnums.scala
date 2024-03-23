@@ -20,4 +20,11 @@ object CommonEnums {
     val asset, liability, revenue = Value
   }
 
+
+  object TransactionStatus extends Enumeration {
+    type TransactionStatus = Value
+
+    val planned, trying, revoked, committed, rejected = Value
+  }
+
 }

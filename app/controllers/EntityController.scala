@@ -4,6 +4,7 @@ import akka.actor.ActorSystem
 import com.bansal.washcatalog.catalog.common.CommonEnums.QueryType
 import com.bansal.washcatalog.catalog.common.Constants.entityMap
 import com.bansal.washcatalog.catalog.domain.{City, Input, Language, PWResp}
+import controllers.RespWrapper.RespWrapper
 import play.api.libs.ws.WSClient
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents, Result}
 import utils.ObjectMapperUtil._
@@ -20,7 +21,7 @@ class EntityController @Inject() (cc: ControllerComponents)(implicit ex: Executi
       entityMap.get(entityId) match {
         case Some(entity) =>
           entity.runQuery(QueryType.getById, Some(id), Map())(ex,ws, actorSystem, headers)
-            .map(resp => Ok(objectMapper.writeValueAsString(resp.data.getOrElse(Seq.empty))))
+            .map(resp => RespWrapper(resp).withHeaders)
         case None =>
           Future(NotFound)
       }
@@ -52,7 +53,7 @@ class EntityController @Inject() (cc: ControllerComponents)(implicit ex: Executi
         entityMap.get(entityId) match {
           case Some(entity) =>
             entity.add(input.get)(ex, ws, actorSystem, headers)
-              .map(resp => Ok(objectMapper.writeValueAsString(resp.data.getOrElse(Seq.empty))))
+              .map(resp => RespWrapper(resp).withHeaders)
         }
       } else {
         Future(BadRequest)
@@ -67,10 +68,9 @@ class EntityController @Inject() (cc: ControllerComponents)(implicit ex: Executi
         } else {
           entity.runQuery(QueryType.getAll, None, Map(), isSimple)(ex, ws, actorSystem, headers)
         }
-        resp.map(resp => Ok(objectMapper.writeValueAsString(resp.data.getOrElse(Seq.empty))))
+        resp.map(resp => RespWrapper(resp).withHeaders)
       case None =>
         Future(NotFound)
     }
   }
-
 }
