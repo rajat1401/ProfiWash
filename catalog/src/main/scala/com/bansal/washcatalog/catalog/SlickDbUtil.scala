@@ -15,10 +15,9 @@ object SlickDbUtil {
    */
   val db= Database.forConfig("db.wash_catalog")
 
-  def runDbAction(action: DBIOAction[Any, NoStream, Effect.All])(implicit logger: Logger): Future[String] = {
+  def runDbAction(action: DBIOAction[Any, NoStream, Effect.All]): Future[String] = {
     db.run(action.asTry).map{
       case Failure(exception) =>
-        logger.error(s"Error while running db action", exception)
         exception.getMessage
       case Success(_) =>
         SUCCESS

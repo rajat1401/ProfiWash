@@ -1,7 +1,7 @@
 package com.bansal.washcatalog.catalog.models
 
+import com.bansal.washcatalog.catalog.common.CommonEnums.TransactionStatus
 import com.bansal.washcatalog.catalog.common.CommonEnums.TransactionStatus.TransactionStatus
-import com.bansal.washcatalog.catalog.common.CommonFields
 import com.bansal.washcatalog.catalog.domain.AccountTransaction
 import slick.jdbc.MySQLProfile.api._
 import com.bansal.washcatalog.catalog.common.SlickEnumMappers._
@@ -24,7 +24,7 @@ class AccountTransactionTable(tag: Tag) extends Table[AccountTransaction](tag, "
 
   def amount: Rep[Double] = column[Double]("amount")
 
-  def state: Rep[TransactionStatus] = column[TransactionStatus]("state")
+  def state: Rep[TransactionStatus.Value] = column[TransactionStatus.Value]("state")
 
   def idx1 = index("idx_account_dr_timestamp", (timestamp, account_dr_id), unique = false)
   def idx2 = index("idx_account_cr_timestamp", (timestamp, account_cr_id), unique = false)
