@@ -35,7 +35,7 @@ case class Account(
                   ) extends RestEntityElement
 
 object Account extends RestEntity[Account] with Logging {
-  private val table = TableQuery[AccountTable]
+  val table = TableQuery[AccountTable]
 
   def inputToTable(input: AccountInput): Account = {
     Account(
@@ -67,7 +67,7 @@ object Account extends RestEntity[Account] with Logging {
 
   override def add(input: JsValue)(implicit ex: ExecutionContext, ws: WSClient, actorSystem: ActorSystem, headers: Map[String, Seq[String]]): Future[PWResp] = {
     val query = addQuery(objectMapper.readValue(input.toString(), classOf[AccountInput]))
-    runDbAction(query._1)(logger).flatMap {
+    runDbAction(query._1).flatMap {
       case SUCCESS => getById(query._2)
       case err => Future(PWResp(success= false, error = Some(err)))
     }

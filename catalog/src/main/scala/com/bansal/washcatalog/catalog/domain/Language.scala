@@ -12,12 +12,10 @@ import play.api.libs.ws.WSClient
 import slick.jdbc.MySQLProfile.api._
 import slick.lifted.TableQuery
 import slick.sql.{FixedSqlAction, FixedSqlStreamingAction}
-import slick.jdbc.MySQLProfile
 import utils.ObjectMapperUtil.objectMapper
 
 import java.sql.Timestamp
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Failure, Success}
 
 
 case class LanguageInput(
@@ -63,7 +61,7 @@ object Language extends RestEntity[Language] with Logging {
 
   override def add(input: JsValue)(implicit ex: ExecutionContext, ws: WSClient, actorSystem: ActorSystem, headers: Map[String, Seq[String]]): Future[PWResp] = {
     val query = addQuery(objectMapper.readValue(input.toString(), classOf[LanguageInput]))
-    runDbAction(DBIO.seq(query._1))(logger).flatMap {
+    runDbAction(DBIO.seq(query._1)).flatMap {
       case SUCCESS => getById(query._2, isSimple = false)
       case exception => Future(PWResp(success = false, error = Some(s"Error ${exception} while adding language")))
     }

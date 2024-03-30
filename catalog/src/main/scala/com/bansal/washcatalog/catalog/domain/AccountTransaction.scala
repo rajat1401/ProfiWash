@@ -37,7 +37,7 @@ case class AccountTransaction(
 ) extends RestEntityElement
 
 object AccountTransaction extends RestEntity[AccountTransaction] {
-  private val table = TableQuery[AccountTransactionTable]
+  val table = TableQuery[AccountTransactionTable]
   override protected def getByIdQuery(id: String): FixedSqlStreamingAction[Seq[AccountTransaction], AccountTransaction, Effect.Read] = table.filter(_.id === id).result
 
   override protected def getAllQuery: FixedSqlStreamingAction[Seq[AccountTransaction], AccountTransaction, Effect.Read] = table.result
@@ -66,7 +66,7 @@ object AccountTransaction extends RestEntity[AccountTransaction] {
 
   override def add(input: JsValue)(implicit ex: ExecutionContext, ws: WSClient, actorSystem: ActorSystem, headers: Map[String, Seq[String]]): Future[PWResp] = {
     val query = addQuery(objectMapper.readValue(input.toString(), classOf[AccountTransactionInput]))
-    runDbAction(query._1)(logger).flatMap{
+    runDbAction(query._1).flatMap{
       case SUCCESS => getById(query._2)
       case err => Future(PWResp(success= false, error = Some(err)))
     }

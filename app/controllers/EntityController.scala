@@ -1,19 +1,21 @@
 package controllers
 
-import akka.actor.ActorSystem
+import akka.actor.{ActorSystem, Props}
 import com.bansal.washcatalog.catalog.common.CommonEnums.QueryType
 import com.bansal.washcatalog.catalog.common.Constants.entityMap
 import com.bansal.washcatalog.catalog.domain.{City, Input, Language, PWResp}
 import controllers.RespWrapper.RespWrapper
+import managers.TransactionManagerActor
 import play.api.libs.ws.WSClient
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents, Result}
-import utils.ObjectMapperUtil._
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class EntityController @Inject() (cc: ControllerComponents)(implicit ex: ExecutionContext, ws: WSClient, actorSystem: ActorSystem)
   extends AbstractController(cc) {
+  val transactionManager = actorSystem.actorOf(TransactionManagerActor.props(), "transactionSupervisor")
+  transactionManager ! "random msg"
 
   def getSingle(entityId: String, id: String): Action[AnyContent] = Action.async {
     implicit request =>
