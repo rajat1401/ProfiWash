@@ -13,6 +13,7 @@ enablePlugins(UniversalPlugin)
 val assemblySettings = Seq(
   assembly / assemblyJarName := name.value + ".jar",
   assembly / assemblyMergeStrategy := {
+    case "module-info.class" => MergeStrategy.discard
     case PathList(ps @ _*) if ps.last endsWith ".class" => MergeStrategy.first
     case PathList(ps @ _*) if ps.last endsWith ".txt" => MergeStrategy.first
     case PathList(ps @ _*) if ps.last endsWith ".properties" => MergeStrategy.concat
