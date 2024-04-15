@@ -45,6 +45,4 @@ object Dependencies {
   val jacksonCore= "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion
   val jacksonScala= "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion
 
-
-
 }
